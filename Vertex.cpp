@@ -41,3 +41,11 @@ double Vertex::angleDefect() const
     
     return defect;
 }
+
+double Vertex::normalCurvature(double theta)
+{
+    double cos2 = pow(cos(theta * M_PI / 180.0), 2);
+    double sin2 = pow(sin(theta * M_PI / 180.0), 2);
+
+    return k1 * cos2 + k2 * sin2;
+}

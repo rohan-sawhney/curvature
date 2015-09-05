@@ -35,13 +35,13 @@ public:
 
 private:
     // computes gaussian curvature per vertex
-    void computeGaussCurvature(Eigen::VectorXd& K);
+    double computeGaussCurvature(Eigen::VectorXd& K);
     
     // builds Laplace Beltrami operator
     void buildLaplacian(Eigen::SparseMatrix<double>& L);
     
     // computes mean curvature per vertex
-    void computeMeanCurvature(Eigen::VectorXd& H);
+    double computeMeanCurvature(Eigen::VectorXd& H);
     
     // center mesh about origin and rescale to unit radius
     void normalize();

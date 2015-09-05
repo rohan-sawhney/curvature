@@ -20,6 +20,9 @@ public:
     // mean curvature, normalized between -1 and 1
     double meanCurvature;
     
+    // principal curvatures
+    double k1, k2;
+    
     // checks if vertex is contained in any edge or face
     bool isIsolated() const;
     
@@ -28,6 +31,9 @@ public:
     
     // 2pi - ∑ø
     double angleDefect() const;
+    
+    // returns unnormalized normal curvature
+    double normalCurvature(double theta);
 };
 
 #endif

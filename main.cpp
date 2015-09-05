@@ -21,11 +21,33 @@ std::string path = "/Users/rohansawhney/Desktop/developer/C++/curvature/torus.ob
 
 Mesh mesh;
 bool success = true;
-bool drawGaussianCurvature = true;
+int curvature = 0; // 0: Gaussian, 1: Mean, 2: Normal
+double theta = 0;
+std::vector<double> normalCurvatures;
+
+void normalizeNormalCurvatures()
+{
+    int v = (int)mesh.vertices.size();
+    normalCurvatures.reserve(v);
+    
+    double maxNormal = -INFINITY;
+    for (int i = 0; i < v; i++) {
+        normalCurvatures[mesh.vertices[i].index] = mesh.vertices[i].normalCurvature(theta);
+        
+        if (maxNormal < fabs(normalCurvatures[mesh.vertices[i].index])) {
+            maxNormal = fabs(normalCurvatures[mesh.vertices[i].index]);
+        }
+    }
+    
+    for (int i = 0; i < v; i++) {
+        normalCurvatures[i] /= maxNormal;
+    }
+}
 
 void printInstructions()
 {
-    std::cerr << "space: toggle between gaussian and mean curvature\n"
+    std::cerr << "→/←: toggle between gaussian, mean and normal curvature\n"
+              << "o/p: decrement/increment theta value for normal curvature between 0 to 180\n"
               << "↑/↓: move in/out\n"
               << "w/s: move up/down\n"
               << "a/d: move left/right\n"
@@ -52,13 +74,17 @@ void draw()
         
         double c = 0.0;
         double c2 = 0.0;
-        if (drawGaussianCurvature) {
+        if (curvature == 0) {
             c = e->he->vertex->gaussCurvature;
             c2 = e->he->flip->vertex->gaussCurvature;
             
-        } else {
+        } else if (curvature == 1) {
             c = e->he->vertex->meanCurvature;
             c2 = e->he->flip->vertex->meanCurvature;
+        
+        } else {
+            c = normalCurvatures[e->he->vertex->index];
+            c2 = normalCurvatures[e->he->flip->vertex->index];
         }
         double dc = (c2 - c) / (double)s;
         
@@ -95,6 +121,10 @@ void display()
     gluLookAt(0, 2.0, z, x, y, 0, 0, 1, 0);
     
     if (success) {
+        if (curvature == 2) {
+            normalizeNormalCurvatures();
+        }
+        
         draw();
     }
 
@@ -106,12 +136,22 @@ void keyboard(unsigned char key, int x0, int y0)
     switch (key) {
         case 27 :
             exit(0);
-        case ' ':
-            drawGaussianCurvature = !drawGaussianCurvature;
-            if (drawGaussianCurvature) {
-                glutSetWindowTitle("Laplace Beltrami Operator - Gaussian Curvature");
-            } else {
-                glutSetWindowTitle("Laplace Beltrami Operator - Mean Curvature");
+        case 'o':
+            if (curvature == 2) {
+                theta -= 10.0;
+                if (theta < 0.0) theta = 180.0;
+                std::string title = "Laplace Beltrami Operator - Normal Curvature, ø = " +
+                                    std::to_string(theta);
+                glutSetWindowTitle(title.c_str());
+            }
+            break;
+        case 'p':
+            if (curvature == 2) {
+                theta += 10.0;
+                if (theta > 180.0) theta = 0.0;
+                std::string title = "Laplace Beltrami Operator - Normal Curvature, ø = " +
+                                    std::to_string(theta);
+                glutSetWindowTitle(title.c_str());
             }
             break;
         case 'a':
@@ -140,6 +180,25 @@ void special(int i, int x0, int y0)
         case GLUT_KEY_DOWN:
             z -= 0.03;
             break;
+        case GLUT_KEY_LEFT:
+            curvature --;
+            if (curvature < 0) curvature = 2;
+            break;
+        case GLUT_KEY_RIGHT:
+            curvature ++;
+            if (curvature == 3) curvature = 0;
+            break;
+    }
+    
+    if (curvature == 0) {
+        glutSetWindowTitle("Laplace Beltrami Operator - Gaussian Curvature");
+        
+    } else if (curvature == 1) {
+        glutSetWindowTitle("Laplace Beltrami Operator - Mean Curvature");
+    
+    } else {
+        std::string title = "Laplace Beltrami Operator - Normal Curvature, ø = " + std::to_string(theta);
+        glutSetWindowTitle(title.c_str());
     }
     
     glutPostRedisplay();

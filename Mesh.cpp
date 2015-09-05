@@ -42,11 +42,16 @@ bool Mesh::write(const std::string& fileName) const
     return false;
 }
 
-void Mesh::computeGaussCurvature(Eigen::VectorXd& K)
+double Mesh::computeGaussCurvature(Eigen::VectorXd& K)
 {
+    double maxGauss = -INFINITY;
     for (size_t i = 0; i < vertices.size(); i++) {
         K(i) = vertices[i].angleDefect() / vertices[i].dualArea();
+        
+        if (maxGauss < fabs(K(i))) maxGauss = fabs(K(i));
     }
+    
+    return maxGauss;
 }
 
 void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L)
@@ -57,21 +62,24 @@ void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L)
         
         HalfEdgeCIter he = v->he;
         double dualArea = v->dualArea();
+        double sumCoefficients = 0.0;
         do {
             // (cotA + cotB) / 2A
             double coefficient = 0.5 * (he->cotan() + he->flip->cotan()) / dualArea;
+            sumCoefficients += coefficient;
             
             L.insert(v->index, he->flip->vertex->index) = coefficient;
-            L.coeffRef(v->index, v->index) -= coefficient;
-
+            
             he = he->flip->next;
         } while (he != v->he);
+        
+        L.insert(v->index, v->index) = -sumCoefficients;
     }
     
     L.makeCompressed();
 }
 
-void Mesh::computeMeanCurvature(Eigen::VectorXd& H)
+double Mesh::computeMeanCurvature(Eigen::VectorXd& H)
 {
     Eigen::SparseMatrix<double> L;
     buildLaplacian(L);
@@ -84,9 +92,14 @@ void Mesh::computeMeanCurvature(Eigen::VectorXd& H)
     x = L * x;
 
     // set absolute mean curvature
+    double maxMean = -INFINITY;
     for (size_t i = 0; i < vertices.size(); i++) {
         H(i) = 0.5 * x.row(i).norm();
+        
+        if (maxMean < H(i)) maxMean = H(i);
     }
+    
+    return maxMean;
 }
 
 void Mesh::computeCurvatures()
@@ -94,34 +107,20 @@ void Mesh::computeCurvatures()
     int v = (int)vertices.size();
     
     Eigen::VectorXd K(v);
-    computeGaussCurvature(K);
+    double maxGauss = computeGaussCurvature(K);
     
     Eigen::VectorXd H(v);
-    computeMeanCurvature(H);
+    double maxMean = computeMeanCurvature(H);
     
-    Eigen::VectorXd k1(v);
-    Eigen::VectorXd k2(v);
-    
-    // compute principal curvatures
-    double maxGauss = -INFINITY;
-    double maxMean = -INFINITY;
+    // compute principal curvatures and normalize gauss, mean curvature
     for (int i = 0; i < v; i++) {
         double dis = sqrt(H(i)*H(i) - K(i));
         
-        k1(i) = H(i) + dis;
-        k2(i) = H(i) - dis;
+        vertices[i].k1 = H(i) + dis;
+        vertices[i].k2 = H(i) - dis;
         
-        vertices[i].gaussCurvature = k1(i) * k2(i);
-        if (maxGauss < fabs(vertices[i].gaussCurvature)) maxGauss = fabs(vertices[i].gaussCurvature);
-        
-        vertices[i].meanCurvature = (k1(i) + k2(i)) / 2.0;
-        if (maxMean < fabs(vertices[i].meanCurvature)) maxMean = fabs(vertices[i].meanCurvature);
-    }
-    
-    // normalize curvatures
-    for (int i = 0; i < v; i++) {
-        vertices[i].gaussCurvature /= maxGauss;
-        vertices[i].meanCurvature /= maxMean;
+        vertices[i].gaussCurvature = K(i) / maxGauss;
+        vertices[i].meanCurvature = H(i) / maxMean;
     }
 }
 
