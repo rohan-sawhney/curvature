@@ -33,7 +33,7 @@ public:
     double angleDefect() const;
     
     // returns unnormalized normal curvature
-    double normalCurvature(double theta);
+    double normalCurvature(double theta) const;
 };
 
 #endif
