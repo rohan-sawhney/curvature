@@ -140,8 +140,7 @@ void keyboard(unsigned char key, int x0, int y0)
             if (curvature == 2) {
                 theta -= 10.0;
                 if (theta < 0.0) theta = 180.0;
-                std::string title = "Laplace Beltrami Operator - Normal Curvature, ø = " +
-                                    std::to_string(theta);
+                std::string title = "Normal Curvature, ø = " + std::to_string(theta);
                 glutSetWindowTitle(title.c_str());
             }
             break;
@@ -149,8 +148,7 @@ void keyboard(unsigned char key, int x0, int y0)
             if (curvature == 2) {
                 theta += 10.0;
                 if (theta > 180.0) theta = 0.0;
-                std::string title = "Laplace Beltrami Operator - Normal Curvature, ø = " +
-                                    std::to_string(theta);
+                std::string title = "Normal Curvature, ø = " + std::to_string(theta);
                 glutSetWindowTitle(title.c_str());
             }
             break;
@@ -191,13 +189,13 @@ void special(int i, int x0, int y0)
     }
     
     if (curvature == 0) {
-        glutSetWindowTitle("Laplace Beltrami Operator - Gaussian Curvature");
+        glutSetWindowTitle("Gaussian Curvature");
         
     } else if (curvature == 1) {
-        glutSetWindowTitle("Laplace Beltrami Operator - Mean Curvature");
+        glutSetWindowTitle("Mean Curvature");
     
     } else {
-        std::string title = "Laplace Beltrami Operator - Normal Curvature, ø = " + std::to_string(theta);
+        std::string title = "Normal Curvature, ø = " + std::to_string(theta);
         glutSetWindowTitle(title.c_str());
     }
     
@@ -213,7 +211,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(gridX, gridY);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInit(&argc, argv);
-    glutCreateWindow("Laplace Beltrami Operator - Gaussian Curvature");
+    glutCreateWindow("Gaussian Curvature");
     init();
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);

@@ -22,6 +22,7 @@ public:
     // write mesh to file
     bool write(const std::string& fileName) const;
     
+    // computes principal, gaussian and mean curvatures
     void computeCurvatures();
     
     // member variables
