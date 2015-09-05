@@ -54,7 +54,7 @@ double Mesh::computeGaussCurvature(Eigen::VectorXd& K)
     return maxGauss;
 }
 
-void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L)
+void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L) const
 {
     L.resize((int)vertices.size(), (int)vertices.size());
     

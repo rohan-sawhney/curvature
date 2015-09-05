@@ -39,7 +39,7 @@ private:
     double computeGaussCurvature(Eigen::VectorXd& K);
     
     // builds Laplace Beltrami operator
-    void buildLaplacian(Eigen::SparseMatrix<double>& L);
+    void buildLaplacian(Eigen::SparseMatrix<double>& L) const;
     
     // computes mean curvature per vertex
     double computeMeanCurvature(Eigen::VectorXd& H);
