@@ -56,7 +56,7 @@ double Mesh::computeGaussCurvature(Eigen::VectorXd& K)
 
 void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L) const
 {
-    L.resize((int)vertices.size(), (int)vertices.size());
+    std::vector<Eigen::Triplet<double>> LTriplet;
     
     for (VertexCIter v = vertices.begin(); v != vertices.end(); v++) {
         
@@ -68,20 +68,20 @@ void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L) const
             double coefficient = 0.5 * (he->cotan() + he->flip->cotan()) / dualArea;
             sumCoefficients += coefficient;
             
-            L.insert(v->index, he->flip->vertex->index) = coefficient;
+            LTriplet.push_back(Eigen::Triplet<double>(v->index, he->flip->vertex->index, coefficient));
             
             he = he->flip->next;
         } while (he != v->he);
         
-        L.insert(v->index, v->index) = -sumCoefficients;
+        LTriplet.push_back(Eigen::Triplet<double>(v->index, v->index, -sumCoefficients));
     }
     
-    L.makeCompressed();
+    L.setFromTriplets(LTriplet.begin(), LTriplet.end());
 }
 
 double Mesh::computeMeanCurvature(Eigen::VectorXd& H)
 {
-    Eigen::SparseMatrix<double> L;
+    Eigen::SparseMatrix<double> L((int)vertices.size(), (int)vertices.size());
     buildLaplacian(L);
     
     Eigen::MatrixXd x;
