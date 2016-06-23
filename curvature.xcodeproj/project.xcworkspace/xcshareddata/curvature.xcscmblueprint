@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "925F6BC4FAC8F6FFA87DAABC4322F905C2823F3B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "925F6BC4FAC8F6FFA87DAABC4322F905C2823F3B" : 0,
+    "93012211585513E702385219484BD8E8D4D7E84E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6DA8E421-5122-45AF-82E2-18704639E99B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "925F6BC4FAC8F6FFA87DAABC4322F905C2823F3B" : "curvature",
+    "93012211585513E702385219484BD8E8D4D7E84E" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "curvature",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "curvature.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rohan-sawhney\/curvature.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "925F6BC4FAC8F6FFA87DAABC4322F905C2823F3B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rohan-sawhney\/medial-axis-transform-2d.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "93012211585513E702385219484BD8E8D4D7E84E"
+    }
+  ]
+}

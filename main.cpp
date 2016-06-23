@@ -17,7 +17,7 @@ double x = 0;
 double y = 0;
 double z = -2.5;
 
-std::string path = "/Users/rohansawhney/Desktop/developer/C++/curvature/torus.obj";
+std::string path = "/Users/rohansawhney/Desktop/developer/C++/halfedge-mesh/bunny.obj";
 
 Mesh mesh;
 bool success = true;

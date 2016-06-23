@@ -68,12 +68,12 @@ void Mesh::buildLaplacian(Eigen::SparseMatrix<double>& L) const
             double coefficient = 0.5 * (he->cotan() + he->flip->cotan()) / dualArea;
             sumCoefficients += coefficient;
             
-            LTriplet.push_back(Eigen::Triplet<double>(v->index, he->flip->vertex->index, coefficient));
+            LTriplet.push_back(Eigen::Triplet<double>(v->index, he->flip->vertex->index, -coefficient));
             
             he = he->flip->next;
         } while (he != v->he);
-        
-        LTriplet.push_back(Eigen::Triplet<double>(v->index, v->index, -sumCoefficients));
+
+        LTriplet.push_back(Eigen::Triplet<double>(v->index, v->index, sumCoefficients));
     }
     
     L.setFromTriplets(LTriplet.begin(), LTriplet.end());
